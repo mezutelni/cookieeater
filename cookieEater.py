@@ -1,35 +1,40 @@
 import random,os,sys,time,keyboard,winsound
 
-os.system("cls")
+if sys.platform == "win32":
+    clr = "cls"
+elif sys.platform == "linux" or sys.platform == "linux2":
+    clr = "clear"
+
+
 board = ["|"," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"]
 line = ["-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"]
+
+board_max_x = board_max_y = 15
+board_min_x = board_min_y = 0
 
 points = 0
 moves = 0
 char = "o"
-player_x = 7
-player_y = 7
-playerCoords = [player_x,player_y,moves,char]
-x = random.randint(1,12)
-y = random.randint(1,13)
-starCoords = [x,y]
+
+player_x = player_y = 7
+player_coords = [player_x,player_y,moves,char]
+
+star_x = random.randint(board_min_x+1,board_max_x-2)
+star_y = random.randint(board_min_y+1,board_max_y-2)
+star_coords = [star_x,star_y]
 
 #This function draws map with player and point, it takes 7 args which are player x and y coordinate, point x and y coordinate, amount of points, amount of moves made by player, and char(graphical representation of player)
 def drawMap(star_x,star_y,player_x,player_y,points,moves,char):
-    
-    while star_x == 0 or star_x == 13:
-        star_x == random.randint(1,12)
-
 
     for i in range(0,16):
         if i == star_y and i == player_y and star_x == player_x:
             points = points + 1
-            x = random.randint(1,12)
-            y = random.randint(1,13)
+            x = random.randint(board_min_x+1,board_max_x-2)
+            y = random.randint(board_min_y+1,board_max_y-2)
             while x == star_x:
-                x = random.randint(1,12)
+                x = random.randint(board_min_x+1,board_max_x-2)
             while y == star_y:
-                y = random.randint(1,13)
+                y = random.randint(board_min_y+1,board_max_y-2)
             star_x = x
             star_y = y
             winsound.PlaySound("bite.wav", winsound.SND_ASYNC)
@@ -99,8 +104,8 @@ def move(player_x,player_y,moves,char):
         print("Thanks for playing, you moved "+str(moves)+" times")
         time.sleep(2)
         sys.exit(0)
-    playerCoords = [player_x,player_y,moves,char]
-    return playerCoords
+    player_coords = [player_x,player_y,moves,char]
+    return player_coords
 
 #This function, is responsible for point movement, it's still on todo
 def starMove(star_x,star_y):
@@ -152,18 +157,16 @@ def starMove(star_x,star_y):
 
 
 while 1:
-    os.system("cls")
-    zwrot = drawMap(starCoords[0],starCoords[1],playerCoords[0],playerCoords[1],points,moves,char)
+    os.system(clr)
+    zwrot = drawMap(star_coords[0],star_coords[1],player_coords[0],player_coords[1],points,moves,char)
 
-    char = playerCoords[3]
-    moves = playerCoords[2]
+    char = player_coords[3]
+    moves = player_coords[2]
 
     points = zwrot[2]
     
-    starCoords[0] = zwrot[0]
-    starCoords[1] = zwrot[1]
-    #starCoords = starMove(starCoords[0],starCoords[1])
-    playerCoords = move(playerCoords[0],playerCoords[1],moves,char)
-    os.system("cls")
+    star_coords[0] = zwrot[0]
+    star_coords[1] = zwrot[1]
 
-    
+    #star_coords = starMove(star_coords[0],star_coords[1])
+    player_coords = move(player_coords[0],player_coords[1],moves,char)
